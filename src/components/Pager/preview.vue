@@ -8,7 +8,6 @@
 import Pager from "./";
 
 export default {
-  name: "TestPager",
   components: {
     Pager,
   },

@@ -22,7 +22,7 @@ export default {
 </script>
 
 <style scoped>
-.avatar-img {
+.avatar-container {
   border-radius: 50%;
   object-fit: cover;
   display: block;
