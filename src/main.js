@@ -10,7 +10,8 @@ import Contact from "./components/SiteAside/Contact/preview.vue";
 import Menu from "./components/SiteAside/Menu/preview.vue";
 import ImageLoader from "./components/ImageLoader/preview.vue";
 import SiteAside from "./components/SiteAside/preview.vue";
+import Layout from "./components/Layout/preview.vue";
 
 new Vue({
-  render: (h) => h(SiteAside),
+  render: (h) => h(App),
 }).$mount("#app");
