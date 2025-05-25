@@ -37,8 +37,6 @@ export default {
   background: @dark;
   padding: 20px 0;
   box-sizing: border-box;
-  overflow-x: hidden;
-  overflow-y: auto;
 }
 .avatar-container {
   margin: 0 auto;
