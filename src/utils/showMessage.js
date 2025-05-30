@@ -25,14 +25,12 @@ export default function (options = {}) {
   div.className = `${styles.message} ${styles["message-" + type]}`;
 
   // 将div加入到容器中
-  if (!container) {
-    container = document.body;
-  } else {
-    // 容器的position是否改动
+  if (options.container) {
     if (getComputedStyle(container).position === "static") {
       container.style.position = "relative";
     }
   }
+
   container.appendChild(div);
 
   // 浏览器强行渲染
