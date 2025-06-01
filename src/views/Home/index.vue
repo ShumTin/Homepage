@@ -1,30 +1,182 @@
 <template>
-  <div class="home-container" ref="container">
-    <h1>首页</h1>
-    <button @click="handleClick">Click</button>
+  <div
+    class="home-container"
+    ref="container"
+    @wheel="handleWheel"
+    @transitionend="handleTransitionend"
+  >
+    <ul class="carousel-container" :style="{ marginTop }">
+      <li v-for="item in banners" :key="item.id">
+        <CarouselItem :carousel="item" />
+      </li>
+    </ul>
+    <div
+      @click="switchTo(index - 1)"
+      :class="['icon', 'icon-up', { hidden: index < 1 }]"
+    >
+      <Icon type="arrowUp" />
+    </div>
+    <div
+      @click="switchTo(index + 1)"
+      :class="['icon', 'icon-down', { hidden: index >= banners.length - 1 }]"
+    >
+      <Icon type="arrowDown" />
+    </div>
+    <ul class="indicators">
+      <li
+        @click="switchTo(i)"
+        :class="{ active: i === index }"
+        v-for="(item, i) in banners"
+        :key="item.id"
+      ></li>
+    </ul>
   </div>
 </template>
 
 <script>
+import { getBanners } from "@/api/banner";
+import CarouselItem from "./CarouselItem.vue";
+import Icon from "@/components/Icon";
+
 export default {
-  methods: {
-    handleClick() {
-      this.$showMessage({
-        content: "评论成功",
-        type: "success",
-        container: this.$refs.container,
-      });
+  components: {
+    CarouselItem,
+    Icon,
+  },
+  data() {
+    return {
+      banners: [],
+      index: 0, // 当前显示的轮播图索引
+      containerHeight: 0, // 容器高度
+      scrollLock: false, // 控制滚轮切换图片
+    };
+  },
+  computed: {
+    marginTop() {
+      return -this.index * this.containerHeight + "px";
     },
+  },
+  methods: {
+    // 切换轮播图
+    switchTo(i) {
+      this.index = i;
+    },
+    handleWheel(e) {
+      if (this.scrollLock) return;
+
+      if (e.deltaY > 0 && this.index < this.banners.length - 1) {
+        this.scrollLock = true;
+        this.switchTo(this.index + 1);
+      } else if (e.deltaY < 0 && this.index > 0) {
+        this.scrollLock = true;
+        this.switchTo(this.index - 1);
+      }
+    },
+    handleTransitionend() {
+      this.scrollLock = false;
+    },
+    handleResize() {
+      this.containerHeight = this.$refs.container.clientHeight;
+    },
+  },
+  async created() {
+    this.banners = await getBanners();
+  },
+  mounted() {
+    this.containerHeight = this.$refs.container.clientHeight;
+    window.addEventListener("resize", this.handleResize);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.handleResize);
   },
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+@import "~@/styles/mixin.less";
+@import "~@/styles/var.less";
 .home-container {
-  background: lightblue;
-  width: 300px;
-  height: 500px;
-  border: 1px solid;
-  margin: 50px auto;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  ul {
+    margin: 0;
+    list-style: none;
+    padding: 0;
+  }
+}
+.carousel-container {
+  width: 100%;
+  height: 100%;
+  transition: 0.5s;
+  li {
+    width: 100%;
+    height: 100%;
+  }
+}
+.icon {
+  .self-center(absolute);
+  transform: translateX(-50%);
+  @gap: 25px;
+  color: @gray;
+  cursor: pointer;
+  font-size: 30px;
+  transition: opacity 0.5s;
+  &.icon-up {
+    top: @gap;
+    animation: jump-up 2s infinite;
+  }
+  &.icon-down {
+    top: auto;
+    bottom: @gap;
+    animation: jump-down 2s infinite;
+  }
+  &.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  @jump: 5px;
+  @keyframes jump-up {
+    0% {
+      transform: translate(-50%, @jump);
+    }
+    50% {
+      transform: translate(-50%, -@jump);
+    }
+    100% {
+      transform: translate(-50%, @jump);
+    }
+  }
+  @keyframes jump-down {
+    0% {
+      transform: translate(-50%, -@jump);
+    }
+    50% {
+      transform: translate(-50%, @jump);
+    }
+    100% {
+      transform: translate(-50%, -@jump);
+    }
+  }
+}
+.indicators {
+  .self-center(absolute);
+  transform: translateY(-50%);
+  right: 20px;
+  left: auto;
+  li {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: @words;
+    cursor: pointer;
+    border: 1px solid white;
+    box-sizing: border-box;
+    margin: 5px 0;
+    &.active {
+      background: #fff;
+    }
+  }
 }
 </style>
