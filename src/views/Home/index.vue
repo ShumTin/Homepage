@@ -1,12 +1,13 @@
 <template>
   <div
+    v-loading="isLoading"
     class="home-container"
     ref="container"
     @wheel="handleWheel"
     @transitionend="handleTransitionend"
   >
     <ul class="carousel-container" :style="{ marginTop }">
-      <li v-for="item in banners" :key="item.id">
+      <li v-for="item in data" :key="item.id">
         <CarouselItem :carousel="item" />
       </li>
     </ul>
@@ -18,7 +19,7 @@
     </div>
     <div
       @click="switchTo(index + 1)"
-      :class="['icon', 'icon-down', { hidden: index >= banners.length - 1 }]"
+      :class="['icon', 'icon-down', { hidden: index >= data.length - 1 }]"
     >
       <Icon type="arrowDown" />
     </div>
@@ -26,7 +27,7 @@
       <li
         @click="switchTo(i)"
         :class="{ active: i === index }"
-        v-for="(item, i) in banners"
+        v-for="(item, i) in data"
         :key="item.id"
       ></li>
     </ul>
@@ -37,15 +38,16 @@
 import { getBanners } from "@/api/banner";
 import CarouselItem from "./CarouselItem.vue";
 import Icon from "@/components/Icon";
+import fetchData from "@/mixins/fetchData.js";
 
 export default {
+  mixins: [fetchData([])],
   components: {
     CarouselItem,
     Icon,
   },
   data() {
     return {
-      banners: [],
       index: 0, // 当前显示的轮播图索引
       containerHeight: 0, // 容器高度
       scrollLock: false, // 控制滚轮切换图片
@@ -78,9 +80,9 @@ export default {
     handleResize() {
       this.containerHeight = this.$refs.container.clientHeight;
     },
-  },
-  async created() {
-    this.banners = await getBanners();
+    async fetchData() {
+      return await getBanners();
+    },
   },
   mounted() {
     this.containerHeight = this.$refs.container.clientHeight;
