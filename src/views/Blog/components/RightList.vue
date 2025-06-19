@@ -1,10 +1,13 @@
 <template>
   <ul class="right-list-container">
-    <li v-for="(item, i) in list" :key="i">
-      <span @click="handleClick(item)" :class="{ active: item.isSelected }">
+    <li @click="handleSelect(item)" v-for="(item, i) in list" :key="i">
+      <span :class="{ active: item.isSelected }">
         {{ item.name }}
       </span>
-      <RightList :list="item.children" @select="handleClick" />
+      <span class="aside" :class="{ active: item.isSelected }">
+        {{ item.aside }}
+      </span>
+      <RightList :list="item.children" @select="handleSelect" />
     </li>
   </ul>
 </template>
@@ -20,8 +23,10 @@ export default {
     },
   },
   methods: {
-    handleClick(item) {
-      this.$emit("select", item);
+    handleSelect(item) {
+      if (!item.isSelected) {
+        this.$emit("select", item);
+      }
     },
   },
 };
@@ -36,6 +41,7 @@ export default {
     min-height: 40px;
     line-height: 40px;
     cursor: pointer;
+    font-size: 14px;
     .active {
       color: @warn;
     }
@@ -43,5 +49,10 @@ export default {
   .right-list-container {
     margin-left: 1em;
   }
+}
+.aside {
+  font-size: 12px;
+  margin-left: 1em;
+  color: @gray;
 }
 </style>

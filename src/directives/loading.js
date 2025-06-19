@@ -23,6 +23,8 @@ export default function (el, binding) {
       el.appendChild(img);
     }
   } else {
-    curImg.remove();
+    if (curImg) {
+      curImg.remove();
+    }
   }
 }
