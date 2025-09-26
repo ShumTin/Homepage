@@ -6,7 +6,7 @@
           <SiteAside />
         </div>
       </template>
-      <template #main>
+      <template>
         <RouterView />
       </template>
     </Layout>

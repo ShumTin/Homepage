@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <template #main>
+    <template>
       <BlogList />
     </template>
     <template #right>

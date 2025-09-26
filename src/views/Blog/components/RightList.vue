@@ -1,10 +1,15 @@
 <template>
   <ul class="right-list-container">
-    <li @click="handleSelect(item)" v-for="(item, i) in list" :key="i">
-      <span :class="{ active: item.isSelected }">
+    <li v-for="(item, i) in list" :key="i">
+      <span @click="handleSelect(item)" :class="{ active: item.isSelected }">
         {{ item.name }}
       </span>
-      <span class="aside" :class="{ active: item.isSelected }">
+      <span
+        v-if="item.aside"
+        @click="handleClick(item)"
+        class="aside"
+        :class="{ active: item.isSelected }"
+      >
         {{ item.aside }}
       </span>
       <RightList :list="item.children" @select="handleSelect" />
@@ -44,6 +49,7 @@ export default {
     font-size: 14px;
     .active {
       color: @warn;
+      font-weight: bold;
     }
   }
   .right-list-container {
