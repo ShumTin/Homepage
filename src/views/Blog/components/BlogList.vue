@@ -3,12 +3,12 @@
     <ul v-show="!isLoading">
       <li v-for="item in data.rows" :key="item.id">
         <div class="thumb" v-if="item.thumb">
-          <RouterLink :to="{ name: 'BlogDetail', params: { id: item.id } }">
+          <RouterLink :to="{ name: 'Detail', params: { id: item.id } }">
             <img :src="item.thumb" :alt="item.title" :title="item.title" />
           </RouterLink>
         </div>
         <div class="main">
-          <RouterLink :to="{ name: 'BlogDetail', params: { id: item.id } }">
+          <RouterLink :to="{ name: 'Detail', params: { id: item.id } }">
             <h2>{{ item.title }}</h2>
           </RouterLink>
           <div class="aside">
@@ -53,6 +53,15 @@ export default {
   components: {
     Pager,
   },
+  mounted() {
+    this.$bus.$on("setMainScroll", this.setMainScroll);
+    this.$refs.container.addEventListener("scroll", this.handleScroll);
+  },
+  beforeDestroy() {
+    this.$bus.$emit("mainScroll");
+    this.$refs.container.removeEventListener("scroll", this.handleScroll);
+    this.$bus.$off("setMainSrcoll", this.setMainScroll);
+  },
   mixins: [fetchData({})],
   methods: {
     async fetchData() {
@@ -61,6 +70,12 @@ export default {
         this.routeInfo.limit,
         this.routeInfo.categoryId
       );
+    },
+    handleScroll() {
+      this.$bus.$emit("mainScroll", this.$refs.container);
+    },
+    setMainScroll(scrollTop) {
+      this.$refs.container.scrollTop = scrollTop;
     },
     formatDate,
     handlePageChange(newPage) {
@@ -91,7 +106,7 @@ export default {
     routeInfo() {
       const categoryId = +this.$route.params.categoryId || -1;
       const page = +this.$route.query.page || 1;
-      const limit = +this.$route.query.limit || 10;
+      const limit = +this.$route.query.limit || 20;
       return {
         categoryId,
         page,
@@ -124,6 +139,7 @@ export default {
     margin: 0;
     padding: 0;
   }
+  scroll-behavior: smooth;
 }
 li {
   display: flex;

@@ -29,7 +29,8 @@ export default {
       location.hash = item.anchor;
     },
     // 设置activeAnchor为正确的值
-    setSelect() {
+    setSelect(scrollDom) {
+      if (!scrollDom) return;
       this.activeAnchor = "";
       // 规定一个范围（距离视口顶部距离），判断是否选中
       const range = 200;

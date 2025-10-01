@@ -36,12 +36,18 @@ export default {
     handleScroll() {
       this.$bus.$emit("mainScroll", this.$refs.mainContainer);
     },
+    setMainScroll(scrollTop) {
+      this.$refs.mainContainer.scrollTop = scrollTop;
+    },
   },
   mounted() {
+    this.$bus.$on("setMainScroll", this.setMainScroll);
     this.$refs.mainContainer.addEventListener("scroll", this.handleScroll);
   },
-  destroyed() {
+  beforeDestroy() {
+    this.$bus.$emit("mainScroll");
     this.$refs.mainContainer.removeEventListener("scroll", this.handleScroll);
+    this.$bus.$off("setMainSrcoll", this.setMainScroll);
   },
   updated() {
     const hash = location.hash;
