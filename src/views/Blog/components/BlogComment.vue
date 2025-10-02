@@ -62,7 +62,6 @@ export default {
       this.page++;
       const resp = await this.fetchData();
       this.data.total = resp.total;
-      console.log(resp);
       this.data.rows = this.data.rows.concat(resp.rows);
       this.isLoading = false;
     },

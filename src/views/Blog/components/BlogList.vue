@@ -48,21 +48,13 @@ import Pager from "@/components/Pager";
 import fetchData from "@/mixins/fetchData";
 import { getBlogs } from "@/api/blog";
 import { formatDate } from "@/utils";
+import mainScroll from "@/mixins/mainScroll";
 
 export default {
   components: {
     Pager,
   },
-  mounted() {
-    this.$bus.$on("setMainScroll", this.setMainScroll);
-    this.$refs.container.addEventListener("scroll", this.handleScroll);
-  },
-  beforeDestroy() {
-    this.$bus.$emit("mainScroll");
-    this.$refs.container.removeEventListener("scroll", this.handleScroll);
-    this.$bus.$off("setMainSrcoll", this.setMainScroll);
-  },
-  mixins: [fetchData({})],
+  mixins: [fetchData({}), mainScroll("container")],
   methods: {
     async fetchData() {
       return await getBlogs(
@@ -70,12 +62,6 @@ export default {
         this.routeInfo.limit,
         this.routeInfo.categoryId
       );
-    },
-    handleScroll() {
-      this.$bus.$emit("mainScroll", this.$refs.container);
-    },
-    setMainScroll(scrollTop) {
-      this.$refs.container.scrollTop = scrollTop;
     },
     formatDate,
     handlePageChange(newPage) {
