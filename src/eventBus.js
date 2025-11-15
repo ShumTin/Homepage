@@ -1,4 +1,5 @@
 import Vue from "vue";
+const app = new Vue({});
 
 /**
  * 事件名：mainScroll
@@ -12,4 +13,6 @@ import Vue from "vue";
  * - 滚动高度
  */
 
-Vue.prototype.$bus = new Vue({});
+Vue.prototype.$bus = app;
+
+export default app;

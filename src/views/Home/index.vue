@@ -66,7 +66,9 @@ export default {
     handleWheel(e) {
       if (this.scrollLock) return;
 
-      if (e.deltaY > 0 && this.index < this.banners.length - 1) {
+      const banners = this.banners || [];
+
+      if (e.deltaY > 0 && this.index < banners.length - 1) {
         this.scrollLock = true;
         this.switchTo(this.index + 1);
       } else if (e.deltaY < 0 && this.index > 0) {

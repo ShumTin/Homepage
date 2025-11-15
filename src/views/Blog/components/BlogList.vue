@@ -4,7 +4,7 @@
       <li v-for="item in data.rows" :key="item.id">
         <div class="thumb" v-if="item.thumb">
           <RouterLink :to="{ name: 'Detail', params: { id: item.id } }">
-            <img :src="item.thumb" :alt="item.title" :title="item.title" />
+            <img v-lazy="item.thumb" :alt="item.title" :title="item.title" />
           </RouterLink>
         </div>
         <div class="main">
@@ -14,7 +14,7 @@
           <div class="aside">
             <span>日期：{{ formatDate(item.createDate) }}</span>
             <span>浏览：{{ item.scanNumber }}</span>
-            <span>评论：{{ item.commitNumber }}</span>
+            <span>评论：{{ item.commentNumber }}</span>
             <RouterLink
               :to="{
                 name: 'BlogCategory',
