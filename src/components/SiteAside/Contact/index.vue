@@ -1,30 +1,30 @@
 <template>
   <ul class="contact-container">
     <li>
-      <a href="https://github.com/ShumTin" target="_blank">
+      <a :href="data.github" target="_blank">
         <div class="icon">
           <Icon type="github" />
         </div>
-        <span>ShumTin</span>
+        <span>{{ data.githubName }}</span>
       </a>
     </li>
     <li>
-      <a href="mailto:shumtin0216@gmail.com">
+      <a :href="data.mail">
         <div class="icon">
           <Icon type="mail" />
         </div>
-        <span>shumtin0216@gmail.com</span>
+        <span>{{ data.mail }}</span>
       </a>
     </li>
     <li>
-      <a href="https://qm.qq.com/q/qhO6vpBofQ" target="_blank">
+      <a :href="data.qqAddContact" target="_blank">
         <div class="icon">
           <Icon type="qq" />
         </div>
-        <span>970206989</span>
+        <span>{{ data.qq }}</span>
       </a>
       <div class="pop">
-        <img :src="qq" />
+        <img :src="data.qqQrcode" />
       </div>
     </li>
     <li>
@@ -32,10 +32,10 @@
         <div class="icon weixin">
           <Icon type="weixin" />
         </div>
-        <span style="text-indent: -2px">ccchtinnn-</span>
+        <span style="text-indent: -2px">{{ data.weixin }}</span>
       </a>
       <div class="pop">
-        <img :src="wechat" />
+        <img :src="data.wechatQrcode" />
       </div>
     </li>
   </ul>
@@ -43,18 +43,14 @@
 
 <script>
 import Icon from "@/components/Icon";
-import qq from "@/assets/qq-qrcode.png";
-import wechat from "@/assets/wechat-qrcode.png";
+import { mapState } from "vuex";
 
 export default {
   components: {
     Icon,
   },
-  data() {
-    return {
-      qq,
-      wechat,
-    };
+  computed: {
+    ...mapState("setting", ["data"]),
   },
 };
 </script>

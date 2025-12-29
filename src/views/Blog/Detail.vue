@@ -20,6 +20,8 @@ import Layout from "@/components/Layout";
 import BlogDetail from "./components/BlogDetail.vue";
 import BlogTOC from "./components/BlogTOC.vue";
 import BlogComment from "./components/BlogComment.vue";
+import mainScroll from "@/mixins/mainScroll";
+import { titleControler } from "@/utils";
 
 export default {
   components: {
@@ -28,20 +30,13 @@ export default {
     BlogTOC,
     BlogComment,
   },
-  mixins: [fetchData(null)],
+  mixins: [fetchData(null), mainScroll("mainContainer")],
   methods: {
     async fetchData() {
-      return await getBlog(this.$route.params.id);
+      const resp = await getBlog(this.$route.params.id);
+      titleControler.setRouteTitle(resp.title);
+      return resp;
     },
-    handleScroll() {
-      this.$bus.$emit("mainScroll", this.$refs.mainContainer);
-    },
-  },
-  mounted() {
-    this.$refs.mainContainer.addEventListener("scroll", this.handleScroll);
-  },
-  destroyed() {
-    this.$refs.mainContainer.removeEventListener("scroll", this.handleScroll);
   },
   updated() {
     const hash = location.hash;

@@ -3,18 +3,18 @@
     <ul v-show="!isLoading">
       <li v-for="item in data.rows" :key="item.id">
         <div class="thumb" v-if="item.thumb">
-          <RouterLink :to="{ name: 'BlogDetail', params: { id: item.id } }">
-            <img :src="item.thumb" :alt="item.title" :title="item.title" />
+          <RouterLink :to="{ name: 'Detail', params: { id: item.id } }">
+            <img v-lazy="item.thumb" :alt="item.title" :title="item.title" />
           </RouterLink>
         </div>
         <div class="main">
-          <RouterLink :to="{ name: 'BlogDetail', params: { id: item.id } }">
+          <RouterLink :to="{ name: 'Detail', params: { id: item.id } }">
             <h2>{{ item.title }}</h2>
           </RouterLink>
           <div class="aside">
             <span>日期：{{ formatDate(item.createDate) }}</span>
             <span>浏览：{{ item.scanNumber }}</span>
-            <span>评论：{{ item.commitNumber }}</span>
+            <span>评论：{{ item.commentNumber }}</span>
             <RouterLink
               :to="{
                 name: 'BlogCategory',
@@ -48,12 +48,13 @@ import Pager from "@/components/Pager";
 import fetchData from "@/mixins/fetchData";
 import { getBlogs } from "@/api/blog";
 import { formatDate } from "@/utils";
+import mainScroll from "@/mixins/mainScroll";
 
 export default {
   components: {
     Pager,
   },
-  mixins: [fetchData({})],
+  mixins: [fetchData({}), mainScroll("container")],
   methods: {
     async fetchData() {
       return await getBlogs(
@@ -91,7 +92,7 @@ export default {
     routeInfo() {
       const categoryId = +this.$route.params.categoryId || -1;
       const page = +this.$route.query.page || 1;
-      const limit = +this.$route.query.limit || 10;
+      const limit = +this.$route.query.limit || 20;
       return {
         categoryId,
         page,
@@ -124,6 +125,7 @@ export default {
     margin: 0;
     padding: 0;
   }
+  scroll-behavior: smooth;
 }
 li {
   display: flex;
