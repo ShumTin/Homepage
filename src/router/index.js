@@ -3,12 +3,14 @@ import VueRouter from "vue-router";
 import routes from "./routes";
 import { titleControler } from "@/utils";
 
-Vue.use(VueRouter); // 使用一个vue插件
+if (!window.VueRouter) {
+  Vue.use(VueRouter);
+}
 
 const router = new VueRouter({
   // 配置
   routes: routes,
-  mode: "history",
+  mode: "hash",
 });
 
 router.afterEach((to, from) => {
