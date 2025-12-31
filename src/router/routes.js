@@ -1,65 +1,88 @@
-import Home from "@/views/Home";
-import About from "@/views/About";
-import Blog from "@/views/Blog";
-import Project from "@/views/Project";
-import Message from "@/views/Message";
-import Detail from "@/views/Blog/Detail";
+import "nprogress/nprogress.css";
+import NotFound from "@/views/NotFound.vue";
+import { start, done, configure } from "nprogress";
+
+configure({
+  trickleSpeed: 20,
+  showSpinner: false,
+});
+
+function delay(duaration) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, duaration);
+  });
+}
+
+function getPageComponent(pageCompResolver) {
+  return async () => {
+    start();
+    if (process.env.NODE_ENV === "development") {
+      await delay(2000);
+    }
+    const comp = await pageCompResolver();
+    done();
+    return comp;
+  };
+}
 
 export default [
   {
     name: "Home",
     path: "/",
-    component: Home,
-    meta: {
-      title: "首页",
-    },
+    component: getPageComponent(() =>
+      import(/* webpackChunkName: "home" */ "@/views/Home")
+    ),
+    meta: { title: "首页" },
   },
   {
     name: "About",
     path: "/about",
-    component: About,
-    meta: {
-      title: "关于我",
-    },
+    component: getPageComponent(() =>
+      import(/* webpackChunkName: "about" */ "@/views/About")
+    ),
+    meta: { title: "关于我" },
   },
   {
     name: "Blog",
     path: "/article",
-    component: Blog,
-    meta: {
-      title: "文章",
-    },
+    component: getPageComponent(() =>
+      import(/* webpackChunkName: "blog" */ "@/views/Blog")
+    ),
+    meta: { title: "文章" },
   },
   {
     name: "BlogCategory",
     path: "/article/cate/:categoryId",
-    component: Blog,
-    meta: {
-      title: "文章",
-    },
+    component: getPageComponent(() =>
+      import(/* webpackChunkName: "blog" */ "@/views/Blog")
+    ),
+    meta: { title: "文章" },
   },
   {
     name: "Detail",
     path: "/article/:id",
-    component: Detail,
-    meta: {
-      title: "文章详情",
-    },
+    component: getPageComponent(() =>
+      import(/* webpackChunkName: "detail" */ "@/views/Blog/Detail")
+    ),
+    meta: { title: "文章详情" },
   },
   {
     name: "Project",
     path: "/project",
-    component: Project,
-    meta: {
-      title: "项目&效果",
-    },
+    component: getPageComponent(() =>
+      import(/* webpackChunkName: "project" */ "@/views/Project")
+    ),
+    meta: { title: "项目&效果" },
   },
   {
     name: "Message",
     path: "/message",
-    component: Message,
-    meta: {
-      title: "留言板",
-    },
+    component: getPageComponent(() =>
+      import(/* webpackChunkName: "message" */ "@/views/Message")
+    ),
+    meta: { title: "留言板" },
   },
+  { name: "NotFound", path: "*", component: NotFound },
 ];
